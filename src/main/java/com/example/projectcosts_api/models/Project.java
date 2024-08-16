@@ -1,14 +1,18 @@
 package com.example.projectcosts_api.models;
 
 import java.time.LocalDate;
+import java.util.Set;
+
 import com.example.projectcosts_api.enums.Category;
 import com.example.projectcosts_api.enums.converters.CategoryConverter;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,28 +37,6 @@ public class Project {
   private LocalDate startDate;
   private LocalDate endDate;
 
-  /*public Project(Long id, String title, float budget, Category category, String description, LocalDate startDate,
-      LocalDate endDate) {
-    this.id = id;
-    this.title = title;
-    this.budget = budget;
-    this.description = description;
-    this.startDate = startDate;
-    this.endDate = endDate;
-    setCategory(category);
-  }
-
-  public Category getCategory(){
-    if (this.category != null) {
-      return Category.valueOf(this.category);
-    }
-    return null;
-  }
-
-  public void setCategory(Category category){
-    if (category != null){
-      this.category = category.getCode();
-    }
-  }*/
-
+  @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<ProjectServices> services;
 }

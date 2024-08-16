@@ -1,8 +1,5 @@
 package com.example.projectcosts_api.dto;
 
-import java.time.LocalDate;
-import java.util.Set;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,14 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectDTO {
+public class ProjectServicesDTO {
   private Long id;
-  private String title;
+  private String name;
   private float budget;
-  private String category;
   private String description;
-  private LocalDate startDate;
-  private LocalDate endDate;
-  private Set<ProjectServicesDTO> services;
 
 }

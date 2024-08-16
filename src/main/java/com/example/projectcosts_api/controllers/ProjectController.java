@@ -26,16 +26,16 @@ public class ProjectController {
   private ProjectService projectService;
 
   @GetMapping
-  public List<ProjectDTO> findAll(){
+  public List<ProjectDTO> findAll() {
     List<ProjectDTO> result = projectService.findAll();
     return result;
   }
 
   @GetMapping("/{id}")
-    public ResponseEntity<ProjectDTO> findById(@PathVariable Long id) {
-        ProjectDTO projectDTO = projectService.findById(id);
-        return ResponseEntity.ok(projectDTO);
-    }
+  public ResponseEntity<ProjectDTO> findById(@PathVariable Long id) {
+    ProjectDTO projectDTO = projectService.findById(id);
+    return ResponseEntity.ok(projectDTO);
+  }
 
   @PostMapping
   public ResponseEntity<ProjectDTO> create(@RequestBody ProjectDTO projectDTO) {
@@ -44,15 +44,14 @@ public class ProjectController {
   }
 
   @PutMapping("/{id}")
-    public ResponseEntity<ProjectDTO> update(@PathVariable Long id, @RequestBody ProjectDTO projectDTO) {
-        ProjectDTO updatedPessoa = projectService.update(id, projectDTO);
-        return ResponseEntity.ok(updatedPessoa);
-    }
+  public ResponseEntity<ProjectDTO> update(@PathVariable Long id, @RequestBody ProjectDTO projectDTO) {
+    ProjectDTO updatedPessoa = projectService.update(id, projectDTO);
+    return ResponseEntity.ok(updatedPessoa);
+  }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        projectService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    projectService.delete(id);
+    return ResponseEntity.noContent().build();
+  }
 }
-
