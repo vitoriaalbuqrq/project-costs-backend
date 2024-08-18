@@ -16,6 +16,7 @@ public class ProjectDTO {
   private Long id;
   private String title;
   private float budget;
+  private float cost;
   private String category;
   private String description;
   private LocalDate startDate;

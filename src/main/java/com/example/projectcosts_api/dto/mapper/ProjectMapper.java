@@ -27,6 +27,7 @@ public class ProjectMapper {
                 project.getId(),
                 project.getTitle(),
                 project.getBudget(),
+                project.getCost(),
                 project.getCategory().getValue(),
                 project.getDescription(),
                 project.getStartDate(),
@@ -38,18 +39,16 @@ public class ProjectMapper {
         if (projectDTO == null) {
             return null;
         }
-        System.out.println("Received ProjectDTO: " + projectDTO);
 
         Project project = new Project();
         project.setId(projectDTO.getId());
         project.setTitle(projectDTO.getTitle());
         project.setBudget(projectDTO.getBudget());
+        project.setCost(projectDTO.getCost());
         project.setCategory(convertCategoryValue(projectDTO.getCategory()));
         project.setDescription(projectDTO.getDescription());
         project.setStartDate(projectDTO.getStartDate());
         project.setEndDate(projectDTO.getEndDate());
-
-        System.out.println("ProjectDTO services: " + projectDTO.getServices());
 
         Set<ProjectServices> services = (projectDTO.getServices() != null)
                 ? projectDTO.getServices().stream()

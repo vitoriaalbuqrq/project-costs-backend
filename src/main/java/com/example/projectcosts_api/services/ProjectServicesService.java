@@ -30,16 +30,16 @@ public class ProjectServicesService {
     @Transactional(readOnly = true)
     public List<ProjectServicesDTO> findAllByProjectId(Long projectId) {
         Project project = projectRepository.findById(projectId)
-            .orElseThrow(() -> new ResourceNotFoundException("Projeto não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Projeto não encontrado"));
         return project.getServices().stream()
-            .map(projectMapper::toServiceDTO)
-            .collect(Collectors.toList());
+                .map(projectMapper::toServiceDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public ProjectServicesDTO findById(Long projectId, Long serviceId) {
         ProjectServices projectService = serviceRepository.findByIdAndProjectId(serviceId, projectId)
-            .orElseThrow(() -> new ResourceNotFoundException("Serviço não encontrado para o projeto"));
+                .orElseThrow(() -> new ResourceNotFoundException("Serviço não encontrado para o projeto"));
 
         return projectMapper.toServiceDTO(projectService);
     }
@@ -47,11 +47,17 @@ public class ProjectServicesService {
     @Transactional
     public ProjectServicesDTO create(Long projectId, ProjectServicesDTO projectServicesDTO) {
         Project project = projectRepository.findById(projectId)
-            .orElseThrow(() -> new ResourceNotFoundException("Projeto não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Projeto não encontrado"));
 
         ProjectServices projectService = projectMapper.toServiceEntity(projectServicesDTO);
-        projectService.setProject(project);  
+
+        boolean added = project.addService(projectService);
+        if (!added) {
+            throw new IllegalArgumentException("O custo total dos serviços excede o orçamento do projeto.");
+        }
+
         projectService = serviceRepository.save(projectService);
+        projectRepository.save(project); 
 
         return projectMapper.toServiceDTO(projectService);
     }
@@ -59,7 +65,7 @@ public class ProjectServicesService {
     @Transactional
     public ProjectServicesDTO update(Long projectId, Long serviceId, ProjectServicesDTO projectServicesDTO) {
         ProjectServices projectService = serviceRepository.findByIdAndProjectId(serviceId, projectId)
-            .orElseThrow(() -> new ResourceNotFoundException("Serviço não encontrado para o projeto"));
+                .orElseThrow(() -> new ResourceNotFoundException("Serviço não encontrado para o projeto"));
 
         projectService.setName(projectServicesDTO.getName());
         projectService.setBudget(projectServicesDTO.getBudget());
@@ -72,7 +78,7 @@ public class ProjectServicesService {
     @Transactional
     public void delete(Long projectId, Long serviceId) {
         ProjectServices projectService = serviceRepository.findByIdAndProjectId(serviceId, projectId)
-            .orElseThrow(() -> new ResourceNotFoundException("Serviço não encontrado para o projeto"));
+                .orElseThrow(() -> new ResourceNotFoundException("Serviço não encontrado para o projeto"));
 
         serviceRepository.delete(projectService);
     }

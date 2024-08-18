@@ -31,12 +31,28 @@ public class Project {
   private Long id;
   private String title;
   private float budget;
+  private float cost;
   @Convert(converter = CategoryConverter.class)
   private Category category;
   private String description;
   private LocalDate startDate;
   private LocalDate endDate;
 
-  @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
   private Set<ProjectServices> services;
+
+  public boolean addService(ProjectServices service){
+    if(this.cost + service.getBudget() > this.budget){
+      return false;
+    }
+    service.setProject(this);
+    this.services.add(service);
+    this.cost += service.getBudget();
+    return true;
+  }
+
+  public void removeService(ProjectServices service) {
+    this.services.remove(service);
+    this.cost -= service.getBudget();
+  }
 }

@@ -33,7 +33,7 @@ public class ServicesController {
     }
 
     @PostMapping
-    public ResponseEntity<ProjectServicesDTO> create(@PathVariable Long projectId, @RequestBody ProjectServicesDTO projectServicesDTO) {
+    public ResponseEntity<ProjectServicesDTO> addService(@PathVariable Long projectId, @RequestBody ProjectServicesDTO projectServicesDTO) {
         ProjectServicesDTO createdService = projectServicesService.create(projectId, projectServicesDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdService);
     }
