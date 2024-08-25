@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.example.projectcosts_api.enums.Category;
 import com.example.projectcosts_api.enums.converters.CategoryConverter;
+import com.example.projectcosts_api.models.user.User;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Convert;
@@ -12,6 +13,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -37,6 +40,10 @@ public class Project {
   private String description;
   private LocalDate startDate;
   private LocalDate endDate;
+  
+  @ManyToOne
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
   private Set<ProjectServices> services;

@@ -7,6 +7,7 @@ import com.example.projectcosts_api.dto.ProjectServicesDTO;
 import com.example.projectcosts_api.enums.Category;
 import com.example.projectcosts_api.models.Project;
 import com.example.projectcosts_api.models.ProjectServices;
+import com.example.projectcosts_api.models.user.User;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,7 +33,9 @@ public class ProjectMapper {
                 project.getDescription(),
                 project.getStartDate(),
                 project.getEndDate(),
-                serviceDTOs);
+                serviceDTOs,
+                project.getUser() != null ? project.getUser().getId() : null
+            );
     }
 
     public Project toEntity(ProjectDTO projectDTO) {
@@ -56,6 +59,12 @@ public class ProjectMapper {
                         .collect(Collectors.toSet())
                 : new HashSet<>();
         project.setServices(services);
+        
+        if (projectDTO.getUserId() != null) {
+            User user = new User();
+            user.setId(projectDTO.getUserId());
+            project.setUser(user);
+        }
 
         return project;
     }

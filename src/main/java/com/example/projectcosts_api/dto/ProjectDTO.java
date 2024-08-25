@@ -22,5 +22,5 @@ public class ProjectDTO {
   private LocalDate startDate;
   private LocalDate endDate;
   private Set<ProjectServicesDTO> services;
-
+  private Long userId;
 }

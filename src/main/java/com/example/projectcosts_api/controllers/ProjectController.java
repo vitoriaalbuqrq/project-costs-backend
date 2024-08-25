@@ -1,55 +1,60 @@
 package com.example.projectcosts_api.controllers;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.example.projectcosts_api.dto.ProjectDTO;
+import com.example.projectcosts_api.models.user.User;
 import com.example.projectcosts_api.services.ProjectService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/projects")
 public class ProjectController {
-  @Autowired
-  private ProjectService projectService;
 
-  @GetMapping
-  public List<ProjectDTO> findAll() {
-    List<ProjectDTO> result = projectService.findAll();
-    return result;
-  }
+    @Autowired
+    private ProjectService projectService;
 
-  @GetMapping("/{id}")
-  public ResponseEntity<ProjectDTO> findById(@PathVariable Long id) {
-    ProjectDTO projectDTO = projectService.findById(id);
-    return ResponseEntity.ok(projectDTO);
-  }
+    @PostMapping
+    public ResponseEntity<ProjectDTO> createProject(@RequestBody ProjectDTO projectDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
+        ProjectDTO createdProject = projectService.createProject(authenticatedUser.getId(), projectDTO);
+        return ResponseEntity.ok(createdProject);
+    }
 
-  @PostMapping
-  public ResponseEntity<ProjectDTO> create(@RequestBody ProjectDTO projectDTO) {
-    ProjectDTO saveProject = projectService.create(projectDTO);
-    return ResponseEntity.status(HttpStatus.CREATED).body(saveProject);
-  }
+    @GetMapping
+    public ResponseEntity<List<ProjectDTO>> getProjects() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
+        List<ProjectDTO> projectDTOs = projectService.getProjectsByUserId(authenticatedUser.getId());
+        return ResponseEntity.ok(projectDTOs);
+    }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<ProjectDTO> update(@PathVariable Long id, @RequestBody ProjectDTO projectDTO) {
-    ProjectDTO updatedPessoa = projectService.update(id, projectDTO);
-    return ResponseEntity.ok(updatedPessoa);
-  }
+    @GetMapping("/{projectId}")
+    public ResponseEntity<ProjectDTO> getProjectById(@PathVariable Long projectId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
+        ProjectDTO projectDTO = projectService.getProjectById(authenticatedUser.getId(), projectId);
+        return ResponseEntity.ok(projectDTO);
+    }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@PathVariable Long id) {
-    projectService.delete(id);
-    return ResponseEntity.noContent().build();
-  }
+    @PutMapping("/{projectId}")
+    public ResponseEntity<ProjectDTO> updateProject(@PathVariable Long projectId, @RequestBody ProjectDTO projectDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
+        ProjectDTO updatedProject = projectService.updateProject(authenticatedUser.getId(), projectId, projectDTO);
+        return ResponseEntity.ok(updatedProject);
+    }
+
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<Void> deleteProject(@PathVariable Long projectId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
+        projectService.deleteProject(authenticatedUser.getId(), projectId);
+        return ResponseEntity.noContent().build();
+    }
 }
