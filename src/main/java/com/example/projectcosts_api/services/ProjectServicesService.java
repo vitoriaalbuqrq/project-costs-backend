@@ -80,6 +80,10 @@ public class ProjectServicesService {
         ProjectServices projectService = serviceRepository.findByIdAndProjectId(serviceId, projectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Serviço não encontrado para o projeto"));
 
+        Project project = projectService.getProject();
+        project.removeService(projectService);
+    
         serviceRepository.delete(projectService);
+        projectRepository.save(project);
     }
 }
